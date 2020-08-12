@@ -4,6 +4,7 @@ import {
   JsonFormsDispatch,
   JsonFormsReduxContext
 } from '@jsonforms/react';
+import { JsonSchema, NOT_APPLICABLE } from '@jsonforms/core';
 import { Provider } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -58,10 +59,10 @@ const data = {
 const getDataAsStringFromStore = (store: Store) =>
   store
     ? JSON.stringify(
-        get(store.getState(), ['jsonforms', 'core', 'data']),
-        null,
-        2
-      )
+      get(store.getState(), ['jsonforms', 'core', 'data']),
+      null,
+      2
+    )
     : '';
 
 const App = ({ store, classes }: AppProps) => {
@@ -79,6 +80,28 @@ const App = ({ store, classes }: AppProps) => {
     },
     [store, standaloneData]
   );
+
+
+  const uischemas = [
+    {
+      tester: (_jsonSchema: JsonSchema, schemaPath: string) => {
+        return schemaPath === '#/properties/foo' ? 2 : NOT_APPLICABLE;
+      },
+      uischema: {
+        type: 'HorizontalLayout',
+        elements: [
+          {
+            type: 'Control',
+            scope: '#/properties/bar'
+          },
+          {
+            type: 'Control',
+            scope: '#/properties/baz'
+          }
+        ]
+      }
+    }
+  ];
 
   useEffect(() => {
     const updateStringData = () => {
@@ -147,6 +170,7 @@ const App = ({ store, classes }: AppProps) => {
                   //register custom renderer
                   { tester: ratingControlTester, renderer: RatingControl }
                 ]}
+                uischemas={uischemas}
                 cells={materialCells}
                 onChange={({ errors, data }) => setStandaloneData(data)}
               />

@@ -21,11 +21,30 @@
     },
     "recurrence": {
       "type": "string",
-      "enum": ["Never", "Daily", "Weekly", "Monthly"]
+      "enum": [
+        "Never",
+        "Daily",
+        "Weekly",
+        "Monthly"
+      ]
     },
     "recurrence_interval": {
       "type": "integer"
+    },
+    "foo": {
+      "type": "object",
+      "properties": {
+        "bar": {
+          "type": "string"
+        },
+        "baz": {
+          "type": "number"
+        }
+      }
     }
   },
-  "required": ["name", "due_date"]
+  "required": [
+    "name",
+    "due_date"
+  ]
 }

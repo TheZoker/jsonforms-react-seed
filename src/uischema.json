@@ -31,6 +31,10 @@
       }
     },
     {
+      "type": "Control",
+      "scope": "#/properties/foo"
+    },
+    {
       "type": "HorizontalLayout",
       "elements": [
         {
