@@ -85,18 +85,14 @@ const App = ({ store, classes }: AppProps) => {
   const uischemas = [
     {
       tester: (_jsonSchema: JsonSchema, schemaPath: string) => {
-        return schemaPath === '#/properties/foo' ? 2 : NOT_APPLICABLE;
+        return schemaPath === '#/properties/comments' ? 2 : NOT_APPLICABLE;
       },
       uischema: {
         type: 'HorizontalLayout',
         elements: [
           {
             type: 'Control',
-            scope: '#/properties/bar'
-          },
-          {
-            type: 'Control',
-            scope: '#/properties/baz'
+            scope: '#/properties/message'
           }
         ]
       }

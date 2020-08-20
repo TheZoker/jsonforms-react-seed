@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@jsonforms/core": "file:.yalc/@jsonforms/core",
-    "@jsonforms/material-renderers": "^2.4.0",
+    "@jsonforms/material-renderers": "file:.yalc/@jsonforms/material-renderers",
     "@jsonforms/react": "file:.yalc/@jsonforms/react",
     "@material-ui/core": "^4.7.0",
     "@material-ui/icons": "^4.5.1",
