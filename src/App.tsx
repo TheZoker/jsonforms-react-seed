@@ -1,15 +1,11 @@
-import React, { Fragment, useState, useEffect, useCallback } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import {
-  JsonForms,
-  JsonFormsDispatch,
-  JsonFormsReduxContext
+  JsonForms
 } from '@jsonforms/react';
-import { Provider } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import withStyles, { WithStyles } from '@material-ui/core/styles/withStyles';
 import createStyles from '@material-ui/core/styles/createStyles';
-import { Tabs, Tab } from '@material-ui/core';
 import logo from './logo.svg';
 import './App.css';
 import schema from './schema.json';
@@ -18,8 +14,6 @@ import {
   materialCells,
   materialRenderers
 } from '@jsonforms/material-renderers';
-import { Store } from 'redux';
-import { get } from 'lodash';
 import RatingControl from './RatingControl';
 import ratingControlTester from './ratingControlTester';
 
@@ -44,10 +38,9 @@ const styles = createStyles({
 });
 
 export interface AppProps extends WithStyles<typeof styles> {
-  store: Store;
 }
 
-const data = {
+const data: any = {
   name: 'Send email to Adrian',
   description: 'Confirm if you have passed the subject\nHereby ...',
   done: true,
@@ -55,39 +48,9 @@ const data = {
   rating: 3
 };
 
-const getDataAsStringFromStore = (store: Store) =>
-  store
-    ? JSON.stringify(
-        get(store.getState(), ['jsonforms', 'core', 'data']),
-        null,
-        2
-      )
-    : '';
-
-const App = ({ store, classes }: AppProps) => {
-  const [tabIdx, setTabIdx] = useState(0);
+const App = ({ classes }: AppProps) => {
   const [displayDataAsString, setDisplayDataAsString] = useState('');
   const [standaloneData, setStandaloneData] = useState(data);
-  const handleTabChange = useCallback(
-    (event: any, newValue: number) => {
-      setTabIdx(newValue);
-      setDisplayDataAsString(
-        newValue === 0
-          ? getDataAsStringFromStore(store)
-          : JSON.stringify(standaloneData, null, 2)
-      );
-    },
-    [store, standaloneData]
-  );
-
-  useEffect(() => {
-    const updateStringData = () => {
-      const stringData = getDataAsStringFromStore(store);
-      setDisplayDataAsString(stringData);
-    };
-    store.subscribe(updateStringData);
-    updateStringData();
-  }, [store]);
 
   useEffect(() => {
     setDisplayDataAsString(JSON.stringify(standaloneData, null, 2));
@@ -121,37 +84,20 @@ const App = ({ store, classes }: AppProps) => {
           <Typography variant={'h3'} className={classes.title}>
             Rendered form
           </Typography>
-          <Tabs value={tabIdx} onChange={handleTabChange}>
-            <Tab label='via Redux' />
-            <Tab label='Standalone' />
-          </Tabs>
-          {tabIdx === 0 && (
-            <div className={classes.demoform} id='form'>
-              {store ? (
-                <Provider store={store}>
-                  <JsonFormsReduxContext>
-                    <JsonFormsDispatch />
-                  </JsonFormsReduxContext>
-                </Provider>
-              ) : null}
-            </div>
-          )}
-          {tabIdx === 1 && (
-            <div className={classes.demoform}>
-              <JsonForms
-                schema={schema}
-                uischema={uischema}
-                data={standaloneData}
-                renderers={[
-                  ...materialRenderers,
-                  //register custom renderer
-                  { tester: ratingControlTester, renderer: RatingControl }
-                ]}
-                cells={materialCells}
-                onChange={({ errors, data }) => setStandaloneData(data)}
-              />
-            </div>
-          )}
+          <div className={classes.demoform}>
+            <JsonForms
+              schema={schema}
+              uischema={uischema}
+              data={standaloneData}
+              renderers={[
+                ...materialRenderers,
+                //register custom renderer
+                { tester: ratingControlTester, renderer: RatingControl }
+              ]}
+              cells={materialCells}
+              onChange={({ errors, data }) => setStandaloneData(data)}
+            />
+          </div>
         </Grid>
       </Grid>
     </Fragment>
