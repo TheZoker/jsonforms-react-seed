@@ -1,5 +1,6 @@
 import { Fragment, useState, useEffect } from 'react';
 import { JsonForms } from '@jsonforms/react';
+import { JsonSchema, NOT_APPLICABLE } from '@jsonforms/core';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -60,6 +61,23 @@ const App = () => {
   const [displayDataAsString, setDisplayDataAsString] = useState('');
   const [jsonformsData, setJsonformsData] = useState<any>(initialData);
 
+  const uischemas = [
+    {
+      tester: (_jsonSchema: JsonSchema, schemaPath: string) => {
+        return schemaPath === '#/properties/comments' ? 2 : NOT_APPLICABLE;
+      },
+      uischema: {
+        type: 'HorizontalLayout',
+        elements: [
+          {
+            type: 'Control',
+            scope: '#/properties/message',
+          },
+        ],
+      },
+    },
+  ];
+
   useEffect(() => {
     setDisplayDataAsString(JSON.stringify(jsonformsData, null, 2));
   }, [jsonformsData]);
@@ -112,6 +130,7 @@ const App = () => {
               renderers={renderers}
               cells={materialCells}
               onChange={({ errors, data }) => setJsonformsData(data)}
+              uischemas={uischemas}
             />
           </div>
         </Grid>
