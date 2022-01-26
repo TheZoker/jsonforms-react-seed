@@ -7,7 +7,8 @@
     },
     "description": {
       "title": "Long Description",
-      "type": "string"
+      "type": "string",
+      "i18n": "Test"
     },
     "done": {
       "type": "boolean"
@@ -26,6 +27,22 @@
     },
     "recurrence_interval": {
       "type": "integer"
+    },
+    "test": {
+      "type": "object",
+      "properties": {
+        "comments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "required": ["name", "due_date"]

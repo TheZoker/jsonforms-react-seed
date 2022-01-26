@@ -14,6 +14,8 @@ import {
 import RatingControl from './RatingControl';
 import ratingControlTester from './ratingControlTester';
 import { makeStyles } from '@mui/styles';
+import get from 'lodash/get';
+import { de, en } from './i18n';
 
 const useStyles = makeStyles({
   container: {
@@ -58,10 +60,26 @@ const renderers = [
 const App = () => {
   const classes = useStyles();
   const [data, setData] = useState<any>(initialData);
+  const [locale, setLocale] = useState<'en'|'de'>('de');
   const stringifiedData = useMemo(() => JSON.stringify(data, null, 2), [data]);
+
+  const createTranslator = (locale: 'en' | 'de') => (key: string, defaultMessage: string | undefined): string => {
+    console.log(key);
+    return get(locale === 'en' ? en : de, key) ?? defaultMessage;
+  };
 
   const clearData = () => {
     setData({});
+  };
+
+  const translation = useMemo(() => createTranslator(locale), [locale]);
+
+  const switchLocale = () => {
+    if(locale === 'en') {
+      setLocale('de');
+    } else {
+      setLocale('en');
+    }
   };
 
   return (
@@ -95,6 +113,15 @@ const App = () => {
           >
             Clear data
           </Button>
+          <Button
+            className={classes.resetButton}
+            onClick={switchLocale}
+            sx={{ mt: 2 }}
+            color='primary'
+            variant='contained'
+          >
+            {String(locale)}
+            </Button>
         </Grid>
         <Grid item sm={6}>
           <Typography variant={'h4'} className={classes.title}>
@@ -107,6 +134,7 @@ const App = () => {
               data={data}
               renderers={renderers}
               cells={materialCells}
+              i18n={{locale: locale, translate: translation}}
               onChange={({ errors, data }) => setData(data)}
             />
           </div>
